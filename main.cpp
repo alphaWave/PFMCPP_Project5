@@ -375,7 +375,6 @@ EffectProcessor::~EffectProcessor()
  Wait for my code review.
  */
 
-#include <iostream>
 int main()
 {
     GraphicalRepresentation pluginFrame = GraphicalRepresentation(0, 0, 1600, 800);

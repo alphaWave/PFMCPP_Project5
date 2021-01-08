@@ -162,6 +162,7 @@ int Oscillator::OscillatorType::setNewPhase(int newPhase)
 }
 bool Oscillator::OscillatorType::changeWaveform(Waveform pWaveform){
     cout << "Changing Waveform..." << endl;
+    mWaveform = pWaveform;
     return true;
 }
 

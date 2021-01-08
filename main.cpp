@@ -111,7 +111,7 @@ struct Oscillator
     {
         enum Waveform {sine, triangle, pulse, whiteNoise, pinkNoise};
 
-        Waveform mWaveform;
+        Waveform waveform;
         float dutyCycle = 0.0f;
         int nrOfVoices = 1;
         float detune = 0.0f;
@@ -119,18 +119,18 @@ struct Oscillator
 
         OscillatorType()
         {
-            mWaveform = pulse;
+            waveform = pulse;
             dutyCycle = 0.5f;
         }
-        OscillatorType(Waveform pWaveform) : mWaveform(pWaveform) {}
+        OscillatorType(Waveform waveformToUse) : waveform(waveformToUse) {}
         ~OscillatorType() { cout << "OscillatorType-Dtor" << endl; }
 
         void cycleThroughNrOfVoices();
         int setNewPhase(int newPhase);
-        bool changeWaveform(Waveform pWaveform);
+        bool changeWaveform(Waveform waveformToUse);
     };
 
-    OscillatorType mOscillatorType;
+    OscillatorType oscillatorType;
     int octave = 0;
     int semitones = 0;
     float coarse = 0;
@@ -139,10 +139,10 @@ struct Oscillator
     GraphicalRepresentation oscRepresentation { GraphicalRepresentation::grey };
 
     Oscillator();
-    Oscillator(OscillatorType pOscillatorType);
+    Oscillator(OscillatorType oscillatorTypeToUse);
     ~Oscillator();
     
-    void playSound(bool MIDISignal);
+    void playSound();
     int convertOctavesToSemitones(int octaves);
     float setSamplingFrequency(float newSamplingFrequency);
 };
@@ -160,32 +160,29 @@ int Oscillator::OscillatorType::setNewPhase(int newPhase)
     phase = newPhase;
     return phase;
 }
-bool Oscillator::OscillatorType::changeWaveform(Waveform pWaveform){
+bool Oscillator::OscillatorType::changeWaveform(Waveform waveformToUse){
     cout << "Changing Waveform..." << endl;
-    mWaveform = pWaveform;
+    waveform = waveformToUse;
     return true;
 }
 
-Oscillator::Oscillator() : mOscillatorType(OscillatorType()) {}
-Oscillator::Oscillator(OscillatorType pOscillatorType)
+Oscillator::Oscillator() : oscillatorType(OscillatorType()) {}
+Oscillator::Oscillator(OscillatorType oscillatorTypeToUse)
 {
-    mOscillatorType = OscillatorType(pOscillatorType);
+    oscillatorType = oscillatorTypeToUse;
 }
 Oscillator::~Oscillator()
 {
     cout << "Oscillator-Dtor" << endl;
 }
 
-void Oscillator::playSound(bool MIDISignal)
+void Oscillator::playSound()
 {
-    while (MIDISignal)
+    for (int i = 0; i < samplingFreq; ++i)
     {
-        for (int i = 0; i < samplingFreq; ++i)
+        if (octave > -1 && octave < 6)
         {
-            if (octave > -1 && octave < 6)
-            {
-                // plays the current sample; (putting this into a cout-statement seemed a bit too enthusiastic)
-            }
+            // plays the current sample; (putting this into a cout-statement seemed a bit too enthusiastic)
         }
     }
 }
@@ -225,7 +222,7 @@ struct Filter
     {
         enum Waveform {sine, triangle, square};
 
-        Waveform mWaveform;
+        Waveform waveform;
         int rateInBPM;
         float rateInHz;
         float amplitude = 1;
@@ -233,7 +230,7 @@ struct Filter
 
         FilterLFO() 
         {
-            mWaveform = sine;
+            waveform = sine;
             rateInBPM = 128;
             rateInHz = 100;
         }
@@ -250,10 +247,10 @@ struct Filter
     float resonance = 0;
     float cutoff = 1000;
     unsigned int mix = 100;
-    FilterType mFilterType;
-    FilterLFO mFilterLFO;
+    FilterType filterType;
+    FilterLFO filterLFO;
 
-    Filter(FilterType pFilterType);
+    Filter(FilterType filterTypeToUse);
     ~Filter();
 
     unsigned int setMixValueToDefault();
@@ -286,10 +283,10 @@ float Filter::FilterLFO::convertBPMToHz()
 }
 Filter::FilterLFO::Waveform Filter::FilterLFO::getWaveform()
 {
-    return mWaveform;
+    return waveform;
 }
 
-Filter::Filter(FilterType pFilterType) : mFilterType(pFilterType) {}
+Filter::Filter(FilterType filterTypeToUse) : filterType(filterTypeToUse) {}
 Filter::~Filter()
 {
     cout << "Filter-Dtor" << endl;
@@ -336,7 +333,7 @@ Synthesizer::Synthesizer()
 Synthesizer::~Synthesizer()
 {
     cout << "Synthesizer-Dtor" << endl;
-    sine.mOscillatorType.changeWaveform(Oscillator::OscillatorType::whiteNoise);
+    sine.oscillatorType.changeWaveform(Oscillator::OscillatorType::whiteNoise);
     lowpass.sweepThroughFrequencyRange();
     cout << "Synthesizer destroyed" << endl;
 }
@@ -358,9 +355,9 @@ Synthesizer::~Synthesizer()
 EffectProcessor::~EffectProcessor()
 {
     cout << "EffectProcessor-Dtor" << endl;
-    bandpass.mFilterLFO.rateInBPM = 135;
-    bandpass.mFilterLFO.convertBPMToHz();
-    bandpass.mFilterLFO.fadeInLFO(22050);
+    bandpass.filterLFO.rateInBPM = 135;
+    bandpass.filterLFO.convertBPMToHz();
+    bandpass.filterLFO.fadeInLFO(22050);
     cout << "Filter destroyed" << endl;
 }
 
@@ -402,8 +399,8 @@ int main()
     Synthesizer synth1;
     Synthesizer synth2;
 
-    synth1.sine.mOscillatorType.setNewPhase(90);
-    cout << "New phase of synth1's sine-osc = " << synth1.sine.mOscillatorType.phase << endl;
+    synth1.sine.oscillatorType.setNewPhase(90);
+    cout << "New phase of synth1's sine-osc = " << synth1.sine.oscillatorType.phase << endl;
     synth1.saw.setSamplingFrequency(1000000000);
     synth1.saw.setSamplingFrequency(192000);
 
@@ -415,7 +412,7 @@ int main()
     fx1.bandpass.resonance = 80.2f;
     fx2.bandpass.resonance = 40.4f;
 
-    cout << "fx1's bandpass-LFO is set to " << fx1.bandpass.mFilterLFO.rateInBPM << "BPM" << endl;
+    cout << "fx1's bandpass-LFO is set to " << fx1.bandpass.filterLFO.rateInBPM << "BPM" << endl;
 
     std::cout << "good to go!" << std::endl;
 }

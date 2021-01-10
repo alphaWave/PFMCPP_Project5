@@ -85,6 +85,11 @@ struct GraphicalRepresentation
     GraphicalRepresentation(Color newBackgroundColor);
     ~GraphicalRepresentation();
 
+    void printDimensions()
+    {
+        cout << "Your new Plugin has size " << this->width << " x " << this->height << "." << endl;
+    }
+
     bool moveToXCoord(int newXCoord, int stepsize = 16);
     bool moveToYCoord(int newYCoord, int stepsize = 10);
     void attachLeftOf(GraphicalRepresentation targetRepresentation);
@@ -164,7 +169,12 @@ struct Oscillator
     Oscillator();
     Oscillator(OscillatorType oscillatorTypeToUse);
     ~Oscillator();
-    
+
+    void printFineTuning()
+    {
+        cout << "pinkNoise's fine tuning is set to " << this->fine << endl;
+    }
+
     void playSound();
     int convertOctavesToSemitones(int octaves);
     float setSamplingFrequency(float newSamplingFrequency);
@@ -276,6 +286,11 @@ struct Filter
     Filter(FilterType filterTypeToUse);
     ~Filter();
 
+    void printPosition()
+    {
+        cout << "LPF is at position (" << this->filterRepresentation.xCoordinate << ", " << this->filterRepresentation.yCoordinate << ")" << endl;
+    }
+
     unsigned int setMixValueToDefault();
     void sweepThroughFrequencyRange();
     float setResonance(float newResonance);
@@ -345,6 +360,11 @@ struct Synthesizer
 
     Synthesizer();
     ~Synthesizer();
+
+    void printSinePhase()
+    {
+        cout << "New phase of synth1's sine-osc = " << this->sine.oscillatorType.phase << endl;
+    }
 };
 
 Synthesizer::Synthesizer()
@@ -370,6 +390,11 @@ Synthesizer::~Synthesizer()
 
      EffectProcessor();
      ~EffectProcessor();
+
+    void printBPLFOrateInBPM()
+    {
+        cout << "fx1's bandpass-LFO is set to " << this->bandpass.filterLFO.rateInBPM << "BPM" << endl;
+    }
  };
 
  EffectProcessor::EffectProcessor() : lowpass(Filter(Filter::LP)), bandpass(Filter(Filter::BP)), highpass(Filter(Filter::HP))
@@ -403,11 +428,13 @@ int main()
     GraphicalRepresentation fxSection = GraphicalRepresentation(0, 400, 1600, 400);
 
     cout << "Your new Plugin has size " << pluginFrame.width << " x " << pluginFrame.height << "." << endl;
+    pluginFrame.printDimensions();
 
     Oscillator pinkNoise = Oscillator(Oscillator::OscillatorType::pinkNoise);
     Oscillator whiteNoise = Oscillator(Oscillator::OscillatorType::whiteNoise);
     
     cout << "pinkNoise's fine tuning is set to " << pinkNoise.fine << endl;
+    pinkNoise.printFineTuning();
 
     Filter lpf = Filter(Filter::LP);
     Filter hpf = Filter(Filter::HP);
@@ -418,12 +445,14 @@ int main()
     lpf.filterRepresentation.attachLeftOf(hpf.filterRepresentation);
 
     cout << "LPF is at position (" << lpf.filterRepresentation.xCoordinate << ", " << lpf.filterRepresentation.yCoordinate << ")" << endl;
+    lpf.printPosition();
 
     Synthesizer synth1;
     Synthesizer synth2;
 
     synth1.sine.oscillatorType.setNewPhase(90);
     cout << "New phase of synth1's sine-osc = " << synth1.sine.oscillatorType.phase << endl;
+    synth1.printSinePhase();
     synth1.saw.setSamplingFrequency(1000000000);
     synth1.saw.setSamplingFrequency(192000);
 
@@ -436,6 +465,7 @@ int main()
     fx2.bandpass.resonance = 40.4f;
 
     cout << "fx1's bandpass-LFO is set to " << fx1.bandpass.filterLFO.rateInBPM << "BPM" << endl;
+    fx1.printBPLFOrateInBPM();
 
     std::cout << "good to go!" << std::endl;
 }

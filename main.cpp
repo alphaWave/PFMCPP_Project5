@@ -102,7 +102,6 @@ GraphicalRepresentation::GraphicalRepresentation(Color newBackgroundColor)
 }
 GraphicalRepresentation::~GraphicalRepresentation()
 {
-    cout << "GraphicalRepresentation-Dtor" << endl;
 }
 
 bool GraphicalRepresentation::moveToXCoord(int newXCoord, int stepsize)
@@ -151,7 +150,7 @@ struct Oscillator
             dutyCycle = 0.5f;
         }
         OscillatorType(Waveform waveformToUse) : waveform(waveformToUse) {}
-        ~OscillatorType() { cout << "OscillatorType-Dtor" << endl; }
+        ~OscillatorType() {}
 
         void cycleThroughNrOfVoices();
         int setNewPhase(int newPhase);
@@ -206,7 +205,6 @@ Oscillator::Oscillator(OscillatorType oscillatorTypeToUse)
 }
 Oscillator::~Oscillator()
 {
-    cout << "Oscillator-Dtor" << endl;
 }
 
 void Oscillator::playSound()
@@ -267,7 +265,7 @@ struct Filter
             rateInBPM = 128;
             rateInHz = 100;
         }
-        ~FilterLFO() { cout << "FilterLFO-Dtor" << endl; }
+        ~FilterLFO() {}
 
         void fadeInLFO(int howManySamples);
         float convertBPMToHz();
@@ -327,7 +325,6 @@ Filter::FilterLFO::Waveform Filter::FilterLFO::getWaveform()
 Filter::Filter(FilterType filterTypeToUse) : filterType(filterTypeToUse) {}
 Filter::~Filter()
 {
-    cout << "Filter-Dtor" << endl;
 }
 
 unsigned int Filter::setMixValueToDefault()
@@ -375,10 +372,8 @@ Synthesizer::Synthesizer()
 }
 Synthesizer::~Synthesizer()
 {
-    cout << "Synthesizer-Dtor" << endl;
     sine.oscillatorType.changeWaveform(Oscillator::OscillatorType::whiteNoise);
     lowpass.sweepThroughFrequencyRange();
-    cout << "Synthesizer destroyed" << endl;
 }
 
 /*
@@ -402,11 +397,9 @@ Synthesizer::~Synthesizer()
  }
 EffectProcessor::~EffectProcessor()
 {
-    cout << "EffectProcessor-Dtor" << endl;
     bandpass.filterLFO.rateInBPM = 135;
     bandpass.filterLFO.convertBPMToHz();
     bandpass.filterLFO.fadeInLFO(22050);
-    cout << "Filter destroyed" << endl;
 }
 
 

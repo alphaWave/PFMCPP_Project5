@@ -50,7 +50,10 @@ You don't have to do this, you can keep your current object name and just change
 
 
 #include <iostream>
+#include "LeakedObjectDetector.h"
 
+using std::cout;
+using std::endl;
 /*
  UDT 1:
  */
@@ -64,7 +67,7 @@ struct GraphicalRepresentation
     int height = 20;
     Color backgroundColor = black;
     bool drawRepresentation = false;
-    string name = "";
+    std::string name = "";
 
     GraphicalRepresentation(int newXCoord, int newYCoord, int newWidth, int newHeight);
     GraphicalRepresentation(Color newBackgroundColor);
@@ -78,6 +81,8 @@ struct GraphicalRepresentation
     bool moveToXCoord(int newXCoord, int stepsize = 16);
     bool moveToYCoord(int newYCoord, int stepsize = 10);
     void attachLeftOf(GraphicalRepresentation targetRepresentation);
+
+    JUCE_LEAK_DETECTOR(GraphicalRepresentation)
 };
 
 GraphicalRepresentation::GraphicalRepresentation(int newXCoord, int newYCoord, int newWidth, int newHeight) : xCoordinate(newXCoord), yCoordinate(newYCoord), width(newWidth), height(newHeight) {}
@@ -113,6 +118,18 @@ void GraphicalRepresentation::attachLeftOf(GraphicalRepresentation targetReprese
     cout << "New xCoordinate = " << xCoordinate << ", new yCoordinate = " << yCoordinate << endl;
 }
 
+struct GraphicalRepresentationWrapper
+{
+    GraphicalRepresentationWrapper(GraphicalRepresentation* ptr) : ptrToGraphRep(ptr) {}
+    ~GraphicalRepresentationWrapper()
+    {
+        delete ptrToGraphRep;
+        ptrToGraphRep = nullptr;
+    }
+
+    GraphicalRepresentation* ptrToGraphRep = nullptr; 
+};
+
 
 /*
  UDT 2:
@@ -140,6 +157,8 @@ struct Oscillator
         void cycleThroughNrOfVoices();
         int setNewPhase(int newPhase);
         bool changeWaveform(Waveform waveformToUse);
+
+        JUCE_LEAK_DETECTOR(OscillatorType)
     };
 
     OscillatorType oscillatorType;
@@ -162,6 +181,8 @@ struct Oscillator
     void playSound();
     int convertOctavesToSemitones(int octaves);
     float setSamplingFrequency(float newSamplingFrequency);
+
+    JUCE_LEAK_DETECTOR(Oscillator)
 };
 
 
@@ -228,6 +249,31 @@ float Oscillator::setSamplingFrequency(float newSamplingFrequency)
     return samplingFreq;
 }
 
+struct OscillatorWrapper
+{
+    OscillatorWrapper(Oscillator* ptr) : ptrToOscillator(ptr) {}
+    ~OscillatorWrapper()
+    {
+        delete ptrToOscillator;
+        ptrToOscillator = nullptr;
+    }
+
+    Oscillator* ptrToOscillator = nullptr;
+};
+
+
+struct OscillatorTypeWrapper
+{
+    OscillatorTypeWrapper(Oscillator::OscillatorType* ptr) : ptrToOscillatorType(ptr) {}
+    ~OscillatorTypeWrapper()
+    {
+        delete ptrToOscillatorType;
+        ptrToOscillatorType = nullptr;
+    }
+
+    Oscillator::OscillatorType* ptrToOscillatorType = nullptr;
+};
+
 
 /*
  UDT 3:
@@ -255,6 +301,8 @@ struct Filter
         void fadeInLFO(int howManySamples);
         float convertBPMToHz();
         Waveform getWaveform();
+
+        JUCE_LEAK_DETECTOR(FilterLFO)
     };
 
     enum FilterType { LP, BP, HP };
@@ -277,6 +325,8 @@ struct Filter
     unsigned int setMixValueToDefault();
     void sweepThroughFrequencyRange();
     float setResonance(float newResonance);
+
+    JUCE_LEAK_DETECTOR(Filter)
 };
 
 void Filter::FilterLFO::fadeInLFO(int howManySamples)
@@ -331,6 +381,30 @@ float Filter::setResonance(float newResonance)
     return resonance;
 }
 
+struct FilterWrapper
+{
+    FilterWrapper(Filter* ptr) : ptrToFilter(ptr) {}
+    ~FilterWrapper()
+    {
+        delete ptrToFilter;
+        ptrToFilter = nullptr;
+    }
+
+    Filter* ptrToFilter = nullptr;
+};
+    
+struct FilterLFOWrapper
+{
+    FilterLFOWrapper(Filter::FilterLFO* ptr) : ptrToFilterLFO(ptr) {}
+    ~FilterLFOWrapper()
+    {
+        delete ptrToFilterLFO;
+        ptrToFilterLFO = nullptr;
+    }
+
+    Filter::FilterLFO* ptrToFilterLFO = nullptr;
+};
+
 /*
  new UDT 4:
  */
@@ -347,6 +421,8 @@ struct Synthesizer
     {
         cout << "New phase of synth1's sine-osc = " << this->sine.oscillatorType.phase << endl;
     }
+
+    JUCE_LEAK_DETECTOR(Synthesizer)
 };
 
 Synthesizer::Synthesizer()
@@ -360,6 +436,18 @@ Synthesizer::~Synthesizer()
     sine.oscillatorType.changeWaveform(Oscillator::OscillatorType::whiteNoise);
     lowpass.sweepThroughFrequencyRange();
 }
+
+struct SynthesizerWrapper
+{
+    SynthesizerWrapper(Synthesizer* ptr) : ptrToSynthesizer(ptr) {}
+    ~SynthesizerWrapper()
+    {
+        delete ptrToSynthesizer;
+        ptrToSynthesizer = nullptr;
+    }
+
+    Synthesizer* ptrToSynthesizer = nullptr;
+};
 
 /*
  new UDT 5:
@@ -375,6 +463,8 @@ Synthesizer::~Synthesizer()
     {
         cout << "fx1's bandpass-LFO is set to " << this->bandpass.filterLFO.rateInBPM << "BPM" << endl;
     }
+
+    JUCE_LEAK_DETECTOR(EffectProcessor)
  };
 
  EffectProcessor::EffectProcessor() : lowpass(Filter(Filter::LP)), bandpass(Filter(Filter::BP)), highpass(Filter(Filter::HP))
@@ -386,6 +476,18 @@ EffectProcessor::~EffectProcessor()
     bandpass.filterLFO.convertBPMToHz();
     bandpass.filterLFO.fadeInLFO(22050);
 }
+
+struct EffectProcessorWrapper
+{
+    EffectProcessorWrapper(EffectProcessor* ptr) : ptrToEffectProcessor(ptr) {}
+    ~EffectProcessorWrapper()
+    {
+        delete ptrToEffectProcessor;
+        ptrToEffectProcessor = nullptr;
+    }
+
+    EffectProcessor* ptrToEffectProcessor;
+};
 
 
 /*
@@ -401,49 +503,49 @@ EffectProcessor::~EffectProcessor()
 
 int main()
 {
-    GraphicalRepresentation pluginFrame = GraphicalRepresentation(0, 0, 1600, 800);
-    GraphicalRepresentation synthSection = GraphicalRepresentation(0, 0, 1600, 400);
-    GraphicalRepresentation fxSection = GraphicalRepresentation(0, 400, 1600, 400);
+    GraphicalRepresentationWrapper pluginFrame(new GraphicalRepresentation(0, 0, 1600, 800));
+    GraphicalRepresentationWrapper synthSection(new GraphicalRepresentation(0, 0, 1600, 400));
+    GraphicalRepresentationWrapper fxSection(new GraphicalRepresentation(0, 400, 1600, 400));
 
-    cout << "Your new Plugin has size " << pluginFrame.width << " x " << pluginFrame.height << "." << endl;
-    pluginFrame.printDimensions();
+    cout << "Your new Plugin has size " << pluginFrame.ptrToGraphRep->width << " x " << pluginFrame.ptrToGraphRep->height << "." << endl;
+    pluginFrame.ptrToGraphRep->printDimensions();
 
-    Oscillator pinkNoise = Oscillator(Oscillator::OscillatorType::pinkNoise);
-    Oscillator whiteNoise = Oscillator(Oscillator::OscillatorType::whiteNoise);
+    OscillatorWrapper pinkNoise(new Oscillator(Oscillator::OscillatorType::pinkNoise));
+    OscillatorWrapper whiteNoise(new Oscillator(Oscillator::OscillatorType::whiteNoise));
     
-    cout << "pinkNoise's fine tuning is set to " << pinkNoise.fine << endl;
-    pinkNoise.printFineTuning();
+    cout << "pinkNoise's fine tuning is set to " << pinkNoise.ptrToOscillator->fine << endl;
+    pinkNoise.ptrToOscillator->printFineTuning();
 
-    Filter lpf = Filter(Filter::LP);
-    Filter hpf = Filter(Filter::HP);
+    FilterWrapper lpf(new Filter(Filter::LP));
+    FilterWrapper hpf(new Filter(Filter::HP));
 
-    hpf.filterRepresentation.xCoordinate = 1000;
-    hpf.filterRepresentation.yCoordinate = 600;
-    lpf.filterRepresentation.backgroundColor = GraphicalRepresentation::black;
-    lpf.filterRepresentation.attachLeftOf(hpf.filterRepresentation);
+    hpf.ptrToFilter->filterRepresentation.xCoordinate = 1000;
+    hpf.ptrToFilter->filterRepresentation.yCoordinate = 600;
+    lpf.ptrToFilter->filterRepresentation.backgroundColor = GraphicalRepresentation::black;
+    lpf.ptrToFilter->filterRepresentation.attachLeftOf(hpf.ptrToFilter->filterRepresentation);
 
-    cout << "LPF is at position (" << lpf.filterRepresentation.xCoordinate << ", " << lpf.filterRepresentation.yCoordinate << ")" << endl;
-    lpf.printPosition();
+    cout << "LPF is at position (" << lpf.ptrToFilter->filterRepresentation.xCoordinate << ", " << lpf.ptrToFilter->filterRepresentation.yCoordinate << ")" << endl;
+    lpf.ptrToFilter->printPosition();
 
-    Synthesizer synth1;
-    Synthesizer synth2;
+    SynthesizerWrapper synth1(new Synthesizer());
+    SynthesizerWrapper synth2(new Synthesizer());
 
-    synth1.sine.oscillatorType.setNewPhase(90);
-    cout << "New phase of synth1's sine-osc = " << synth1.sine.oscillatorType.phase << endl;
-    synth1.printSinePhase();
-    synth1.saw.setSamplingFrequency(1000000000);
-    synth1.saw.setSamplingFrequency(192000);
+    synth1.ptrToSynthesizer->sine.oscillatorType.setNewPhase(90);
+    cout << "New phase of synth1's sine-osc = " << synth1.ptrToSynthesizer->sine.oscillatorType.phase << endl;
+    synth1.ptrToSynthesizer->printSinePhase();
+    synth1.ptrToSynthesizer->saw.setSamplingFrequency(1000000000);
+    synth1.ptrToSynthesizer->saw.setSamplingFrequency(192000);
 
-    synth2.square.convertOctavesToSemitones(4);
+    synth2.ptrToSynthesizer->square.convertOctavesToSemitones(4);
 
-    EffectProcessor fx1 = EffectProcessor();
-    EffectProcessor fx2 = EffectProcessor();
+    EffectProcessorWrapper fx1(new EffectProcessor());
+    EffectProcessorWrapper fx2(new EffectProcessor());
 
-    fx1.bandpass.resonance = 80.2f;
-    fx2.bandpass.resonance = 40.4f;
+    fx1.ptrToEffectProcessor->bandpass.resonance = 80.2f;
+    fx2.ptrToEffectProcessor->bandpass.resonance = 40.4f;
 
-    cout << "fx1's bandpass-LFO is set to " << fx1.bandpass.filterLFO.rateInBPM << "BPM" << endl;
-    fx1.printBPLFOrateInBPM();
+    cout << "fx1's bandpass-LFO is set to " << fx1.ptrToEffectProcessor->bandpass.filterLFO.rateInBPM << "BPM" << endl;
+    fx1.ptrToEffectProcessor->printBPLFOrateInBPM();
 
     std::cout << "good to go!" << std::endl;
 }

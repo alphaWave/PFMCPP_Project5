@@ -486,7 +486,7 @@ struct EffectProcessorWrapper
         ptrToEffectProcessor = nullptr;
     }
 
-    EffectProcessor* ptrToEffectProcessor;
+    EffectProcessor* ptrToEffectProcessor = nullptr;
 };
 
 

@@ -52,7 +52,7 @@ bool Oscillator::OscillatorType::changeWaveform(Waveform waveformToUse){
 
 void Oscillator::printFineTuning()
 {
-    std::cout << "Fine tuning is set to " << this->fine << std::endl;
+    std::cout << "pinkNoise's fine tuning is set to " << this->fine << std::endl;
 }
 
 void Oscillator::playSound()

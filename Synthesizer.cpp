@@ -15,5 +15,5 @@ Synthesizer::~Synthesizer()
 
 void Synthesizer::printSinePhase()
 {
-    std::cout << "Phase of sine-osc = " << this->sine.oscillatorType.phase << std::endl;
+    std::cout << "New phase of synth1's sine-osc = " << this->sine.oscillatorType.phase << std::endl;
 }

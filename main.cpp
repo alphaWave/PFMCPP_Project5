@@ -63,29 +63,7 @@
 
 
 
-struct FilterWrapper
-{
-    FilterWrapper(Filter* ptr) : ptrToFilter(ptr) {}
-    ~FilterWrapper()
-    {
-        delete ptrToFilter;
-        ptrToFilter = nullptr;
-    }
 
-    Filter* ptrToFilter = nullptr;
-};
-    
-struct FilterLFOWrapper
-{
-    FilterLFOWrapper(Filter::FilterLFO* ptr) : ptrToFilterLFO(ptr) {}
-    ~FilterLFOWrapper()
-    {
-        delete ptrToFilterLFO;
-        ptrToFilterLFO = nullptr;
-    }
-
-    Filter::FilterLFO* ptrToFilterLFO = nullptr;
-};
 
 /*
  new UDT 4:
@@ -94,17 +72,7 @@ struct FilterLFOWrapper
 
 
 
-struct SynthesizerWrapper
-{
-    SynthesizerWrapper(Synthesizer* ptr) : ptrToSynthesizer(ptr) {}
-    ~SynthesizerWrapper()
-    {
-        delete ptrToSynthesizer;
-        ptrToSynthesizer = nullptr;
-    }
 
-    Synthesizer* ptrToSynthesizer = nullptr;
-};
 
 /*
  new UDT 5:
@@ -113,17 +81,7 @@ struct SynthesizerWrapper
 
 
 
-struct EffectProcessorWrapper
-{
-    EffectProcessorWrapper(EffectProcessor* ptr) : ptrToEffectProcessor(ptr) {}
-    ~EffectProcessorWrapper()
-    {
-        delete ptrToEffectProcessor;
-        ptrToEffectProcessor = nullptr;
-    }
 
-    EffectProcessor* ptrToEffectProcessor = nullptr;
-};
 
 
 /*

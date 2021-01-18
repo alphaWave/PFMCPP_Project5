@@ -31,59 +31,6 @@
  */
 
 
-
-#include <iostream>
-#include "LeakedObjectDetector.h"
-
-/*
- UDT 1:
- */
-
-
-
-
-
-
-
-/*
- UDT 2:
- */
-
-
-
-
-
-
-
-
-/*
- UDT 3:
- */
-
-
-
-
-
-
-/*
- new UDT 4:
- */
-
-
-
-
-
-
-/*
- new UDT 5:
- */
- 
-
-
-
-
-
-
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
  Commit your changes by clicking on the Source Control panel on the left, entering a message, and click [Commit and push].
@@ -94,6 +41,17 @@
  send me a DM to review your pull request when the project is ready for review.
  Wait for my code review.
  */
+
+
+#include <iostream>
+#include "LeakedObjectDetector.h"
+#include "EffectProcessor.h"
+#include "Filter.h"
+#include "GraphicalRepresentation.h"
+#include "Oscillator.h"
+#include "Synthesizer.h"
+#include "Wrappers.h"
+
 
 int main()
 {

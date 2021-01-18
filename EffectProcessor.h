@@ -4,15 +4,14 @@
 #include "Filter.h"
 
 
- struct EffectProcessor
- {
-     Filter lowpass, bandpass, highpass;
+struct EffectProcessor
+{
+    Filter lowpass, bandpass, highpass;
 
-     EffectProcessor();
-     ~EffectProcessor();
+    EffectProcessor();
+    ~EffectProcessor();
 
     void printBPLFOrateInBPM();
 
     JUCE_LEAK_DETECTOR(EffectProcessor)
- };
- 
+};

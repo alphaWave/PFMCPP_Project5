@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LeakedObjectDetector.h"
+#include "GraphicalRepresentation.h"
 
 
 struct Oscillator

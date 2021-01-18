@@ -1,6 +1,8 @@
 #pragma once
 
 #include "LeakedObjectDetector.h"
+#include "Filter.h"
+
 
  struct EffectProcessor
  {

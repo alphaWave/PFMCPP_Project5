@@ -2,6 +2,7 @@
 
 #include "LeakedObjectDetector.h"
 
+
 struct Filter
 {
     struct FilterLFO
@@ -14,13 +15,8 @@ struct Filter
         float amplitude = 1;
         bool isBPM = true;
 
-        FilterLFO() 
-        {
-            waveform = sine;
-            rateInBPM = 128;
-            rateInHz = 100;
-        }
-        ~FilterLFO() {}
+        FilterLFO();
+        ~FilterLFO();
 
         void fadeInLFO(int howManySamples);
         float convertBPMToHz();

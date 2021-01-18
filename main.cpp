@@ -40,54 +40,9 @@
  */
 
 
-GraphicalRepresentation::GraphicalRepresentation(int newXCoord, int newYCoord, int newWidth, int newHeight) : xCoordinate(newXCoord), yCoordinate(newYCoord), width(newWidth), height(newHeight) {}
-GraphicalRepresentation::GraphicalRepresentation(Color newBackgroundColor)
-{
-    backgroundColor = newBackgroundColor;
-}
-GraphicalRepresentation::~GraphicalRepresentation()
-{
-}
 
-void GraphicalRepresentation::printDimensions()
-{
-    std::cout << "Your new Plugin has size " << this->width << " x " << this->height << "." << std::endl;
-}
-bool GraphicalRepresentation::moveToXCoord(int newXCoord, int stepsize)
-{
-    while (xCoordinate < newXCoord)
-    {
-        xCoordinate += stepsize;
-        std::cout << "xCoordinate = " << xCoordinate << std::endl;
-    }
-    return true;
-}
-bool GraphicalRepresentation::moveToYCoord(int newYCoord, int stepsize)
-{
-    while (yCoordinate < newYCoord){
-        yCoordinate += stepsize;
-        std::cout << "yCoordinate = " << yCoordinate << std::endl;
-    }
-    return true;
-}
-void GraphicalRepresentation::attachLeftOf(GraphicalRepresentation targetRepresentation)
-{
-    xCoordinate = targetRepresentation.xCoordinate - width;
-    yCoordinate = targetRepresentation.yCoordinate;
-    std::cout << "New xCoordinate = " << xCoordinate << ", new yCoordinate = " << yCoordinate << std::endl;
-}
 
-struct GraphicalRepresentationWrapper
-{
-    GraphicalRepresentationWrapper(GraphicalRepresentation* ptr) : ptrToGraphRep(ptr) {}
-    ~GraphicalRepresentationWrapper()
-    {
-        delete ptrToGraphRep;
-        ptrToGraphRep = nullptr;
-    }
 
-    GraphicalRepresentation* ptrToGraphRep = nullptr; 
-};
 
 
 /*
@@ -96,97 +51,9 @@ struct GraphicalRepresentationWrapper
 
 
 
-void Oscillator::OscillatorType::cycleThroughNrOfVoices()
-{
-    for (int i = 1; i <= 16; ++i)
-    {
-        std::cout << "Number of voices = " << i << std::endl;
-    }
-}
-int Oscillator::OscillatorType::setNewPhase(int newPhase)
-{
-    phase = newPhase;
-    return phase;
-}
-bool Oscillator::OscillatorType::changeWaveform(Waveform waveformToUse){
-    std::cout << "Changing Waveform..." << std::endl;
-    waveform = waveformToUse;
-    return true;
-}
-
-Oscillator::Oscillator() : oscillatorType(OscillatorType()) {}
-Oscillator::Oscillator(OscillatorType oscillatorTypeToUse)
-{
-    oscillatorType = oscillatorTypeToUse;
-}
-Oscillator::~Oscillator()
-{
-}
-
-void Oscillator::printFineTuning()
-{
-    std::cout << "Fine tuning is set to " << this->fine << std::endl;
-}
-void Oscillator::playSound()
-{
-    for (int i = 0; i < samplingFreq; ++i)
-    {
-        if (octave > -1 && octave < 6)
-        {
-            // plays the current sample; (putting this into a cout-statement seemed a bit too enthusiastic)
-        }
-    }
-}
-int Oscillator::convertOctavesToSemitones(int octaves)
-{
-    if (octaves > 0 && octaves < 5)
-    {
-        semitones = octaves * 12;
-    }
-    else
-    {
-        std::cout << "Octaves-value out of range" << std::endl;
-    }
-    return semitones;
-}
-float Oscillator::setSamplingFrequency(float newSamplingFrequency)
-{
-    if (newSamplingFrequency >= 44100 && newSamplingFrequency <= 192000)
-    {
-        samplingFreq = newSamplingFrequency;
-        std::cout << "Sampling-frequency set to " << samplingFreq << std::endl;
-    }
-    else
-    {
-        std::cout << "Sampling-frequency out of range" << std::endl;
-    }
-    return samplingFreq;
-}
-
-struct OscillatorWrapper
-{
-    OscillatorWrapper(Oscillator* ptr) : ptrToOscillator(ptr) {}
-    ~OscillatorWrapper()
-    {
-        delete ptrToOscillator;
-        ptrToOscillator = nullptr;
-    }
-
-    Oscillator* ptrToOscillator = nullptr;
-};
 
 
-struct OscillatorTypeWrapper
-{
-    OscillatorTypeWrapper(Oscillator::OscillatorType* ptr) : ptrToOscillatorType(ptr) {}
-    ~OscillatorTypeWrapper()
-    {
-        delete ptrToOscillatorType;
-        ptrToOscillatorType = nullptr;
-    }
 
-    Oscillator::OscillatorType* ptrToOscillatorType = nullptr;
-};
 
 
 /*
@@ -194,61 +61,7 @@ struct OscillatorTypeWrapper
  */
 
 
-void Filter::FilterLFO::fadeInLFO(int howManySamples)
-{
-    float fadeStep = amplitude / howManySamples;
-    float targetAmplitude = amplitude;
-    while (amplitude < targetAmplitude)
-    {
-        amplitude += fadeStep;
-        if (amplitude > targetAmplitude)
-        {
-            amplitude = targetAmplitude;
-        }
-        std::cout << "Current Amplitude = " << amplitude << std::endl;
-    }
-    std::cout << "Reached target-Amplitude" << std::endl;
-}
-float Filter::FilterLFO::convertBPMToHz()
-{
-    std::cout << "Converting " << rateInBPM << " BPM to Hz..." << std::endl;
-    rateInHz = rateInBPM / 60;
-    isBPM = false;
-    std::cout << "Rate in Hz = " << rateInHz << std::endl;
-    return rateInHz;
-}
-Filter::FilterLFO::Waveform Filter::FilterLFO::getWaveform()
-{
-    return waveform;
-}
 
-Filter::Filter(FilterType filterTypeToUse) : filterType(filterTypeToUse) {}
-Filter::~Filter()
-{
-}
-
-void Filter::printPosition()
-{
-    std::cout << "LPF is at position (" << this->filterRepresentation.xCoordinate << ", " << this->filterRepresentation.yCoordinate << ")" << std::endl;
-}
-unsigned int Filter::setMixValueToDefault()
-{
-    mix = 100;
-    return mix;
-}
-void Filter::sweepThroughFrequencyRange()
-{
-    std::cout << "Sweeping through frequency range..." << std::endl;
-    for (int i = 0; i < 20001; ++i)
-    {
-        cutoff = i;
-    }
-}
-float Filter::setResonance(float newResonance)
-{
-    resonance = newResonance;
-    return resonance;
-}
 
 struct FilterWrapper
 {
@@ -279,22 +92,7 @@ struct FilterLFOWrapper
  */
 
 
-Synthesizer::Synthesizer()
-{
-    sine = Oscillator(sine);
-    saw = Oscillator(saw);
-    square = Oscillator();
-}
-Synthesizer::~Synthesizer()
-{
-    sine.oscillatorType.changeWaveform(Oscillator::OscillatorType::whiteNoise);
-    lowpass.sweepThroughFrequencyRange();
-}
 
-void Synthesizer::printSinePhase()
-{
-    std::cout << "Phase of sine-osc = " << this->sine.oscillatorType.phase << std::endl;
-}
 
 struct SynthesizerWrapper
 {
@@ -311,32 +109,9 @@ struct SynthesizerWrapper
 /*
  new UDT 5:
  */
- struct EffectProcessor
- {
-     Filter lowpass, bandpass, highpass;
+ 
 
-     EffectProcessor();
-     ~EffectProcessor();
 
-    void printBPLFOrateInBPM();
-
-    JUCE_LEAK_DETECTOR(EffectProcessor)
- };
-
- EffectProcessor::EffectProcessor() : lowpass(Filter(Filter::LP)), bandpass(Filter(Filter::BP)), highpass(Filter(Filter::HP))
- {
- }
-EffectProcessor::~EffectProcessor()
-{
-    bandpass.filterLFO.rateInBPM = 135;
-    bandpass.filterLFO.convertBPMToHz();
-    bandpass.filterLFO.fadeInLFO(22050);
-}
-
-void EffectProcessor::printBPLFOrateInBPM()
-{
-    std::cout << "fx1's bandpass-LFO is set to " << this->bandpass.filterLFO.rateInBPM << "BPM" << std::endl;
-}
 
 struct EffectProcessorWrapper
 {

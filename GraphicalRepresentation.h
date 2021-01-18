@@ -2,6 +2,7 @@
 
 #include "LeakedObjectDetector.h"
 
+
 struct GraphicalRepresentation
 {
     enum Color {white, grey, black, blue};

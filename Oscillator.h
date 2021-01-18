@@ -2,6 +2,7 @@
 
 #include "LeakedObjectDetector.h"
 
+
 struct Oscillator
 {
     struct OscillatorType
@@ -14,13 +15,9 @@ struct Oscillator
         float detune = 0.0f;
         int phase = 0;
 
-        OscillatorType()
-        {
-            waveform = pulse;
-            dutyCycle = 0.5f;
-        }
-        OscillatorType(Waveform waveformToUse) : waveform(waveformToUse) {}
-        ~OscillatorType() {}
+        OscillatorType();
+        OscillatorType(Waveform waveformToUse);
+        ~OscillatorType();
 
         void cycleThroughNrOfVoices();
         int setNewPhase(int newPhase);
